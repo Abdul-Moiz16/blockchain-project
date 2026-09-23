@@ -1,1 +1,29 @@
+# Node
+/node_modules
+
+# Hardhat build/compile output
+/artifacts
+/cache
+/coverage
+/.gas-snapshot
+/snapshots
+
+# TypeScript build output
+/dist
+/types
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Editor
 .vscode
+
+# Off-chain data store (generated locally per user; never real personal data anyway)
+/offchain/data/*
+!/offchain/data/.gitkeep
+
+# Python
+__pycache__/
+*.pyc

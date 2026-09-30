@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.34;
+import "./DataTypes.sol";
+
 
 
 contract IdentityRegistry {
@@ -16,8 +18,8 @@ contract IdentityRegistry {
         uint256 expiry; 
     }
 
-    mapping(address => Attestation) public attestations;
-    
+    mapping(address => mapping(DataType => Attestation)) public attestations;
+
     constructor() {
         administrator = msg.sender;
     }

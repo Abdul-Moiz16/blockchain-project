@@ -7,14 +7,18 @@ import "./IdentityRegistry.sol";
 contract ConsentManager {
     Token public tokenContract;
     IdentityRegistry public registryContract;
-    
-    mapping(bytes32 => ConsentRecord) public consentRecords;
-    
+    struct ConsentRecord {
+        bool active;
+        uint256 expiresAt;
+    }
+
+    mapping(address => mapping(address => mapping(DataType => ConsentRecord))) public consentRecords;
+
     constructor(address _tokenAddress, address _registryAddress) {
-        tokenContract = TokenPart(_tokenAddress);
+        tokenContract = Token(_tokenAddress);
         registryContract = IdentityRegistry(_registryAddress);
     }
     
-
+           
     // implement giveconsent, revokeconsent, checkpermission
 }

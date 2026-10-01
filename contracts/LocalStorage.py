@@ -19,3 +19,45 @@ class UserLocalStore:
         self.account = Account.from_key(user_private_key)
 
     #implement validateTicketandServe and generateAttributeHashes
+
+    def generateAttributeHashes(self):
+
+        # this is the hash that gets saved in the identityregistry
+        payload = json.dumps({
+            "Name": self.Name,
+            "Email": self.Email,
+            "AccountNumber": self.AccountNumber,
+            "CreditTier": self.CreditTier,
+            "IncomeFigure": self.IncomeFigure
+        }, sort_keys=True)
+        
+        # Returns a 32-byte Keccak hash representing the raw data
+        return Web3.keccak(text=payload).hex()
+
+    def validateTicketAndServe(self, ticket, requested_level):
+        # Validate that the ticket is structurally sound, the consent manager makes the ticket 0 if its denied 
+        # because it always returns a bytes32
+
+        if not ticket or int(ticket, 16) == 0:
+            return {"error": "Invalid or denied access ticket."}
+    
+        # Serve data restrictively based on the DataType level requested
+        # 0 = CREDIT_TIER_ONLY, 1 = INCOME_BAND, 2 = FULL_STATEMENT
+        # this default gets served because the 0 is already proved by getting here.
+        served_data = {
+            "CreditTier": self.CreditTier,
+            "AttestorSignature": self.AttestorSignature.decode('utf-8')
+        }
+        
+        if requested_level >= 1:
+            served_data["IncomeFigure"] = self.IncomeFigure
+            
+        if requested_level == 2:
+            served_data["Name"] = self.Name
+            served_data["Email"] = self.Email
+            served_data["AccountNumber"] = self.AccountNumber
+            
+        return {
+            "status": "success",
+            "served_payload": served_data
+        }

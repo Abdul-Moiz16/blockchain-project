@@ -15,6 +15,20 @@ contract Token {
     constructor() {
         owner = msg.sender;
     }
+
+    event Mint(address indexed to, uint256 amount);
+
     
     // transfers and minting still need to be implemented 
+
+    function mint(address to, uint256 amount) external onlyOwner {
+        balanceOf[to] += amount;
+        emit Mint(to, amount);
+    }
+
+    function transferOwnership(address newOwner) external onlyOwner {
+        owner = newOwner;
+    }
+
+
 }

@@ -44,7 +44,7 @@ contract ConsentManager {
             isActive: true
         });
         
-        token.mint(msg.sender, 1 * 10**18);
+        token.mint(msg.sender, 1);
 
         emit ConsentGranted(msg.sender, requester, expiry);
     }

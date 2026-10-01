@@ -5,20 +5,38 @@ import "./Token.sol";
 import "./IdentityRegistry.sol";
 
 contract ConsentManager {
-    Token public tokenContract;
-    IdentityRegistry public registryContract;
     struct ConsentRecord {
-        bool active;
-        uint256 expiresAt;
+        uint256 expiryDate;
+        bool isActive;
     }
 
-    mapping(address => mapping(address => mapping(DataType => ConsentRecord))) public consentRecords;
+    // Mapping: user => (requester => ConsentRecord)
+    mapping(address => mapping(address => ConsentRecord)) public consentRecords;
 
-    constructor(address _tokenAddress, address _registryAddress) {
-        tokenContract = Token(_tokenAddress);
-        registryContract = IdentityRegistry(_registryAddress);
+    event ConsentGranted(address indexed user, address indexed requester, uint256 expiryDate);
+    event ConsentRevoked(address indexed user, address indexed requester);
+
+    // User grants permission to a specific requester
+    function createConsent(address requester, uint256 durationInSeconds) external {
+        uint256 expiry = block.timestamp + durationInSeconds;
+        
+        consentRecords[msg.sender][requester] = ConsentRecord({
+            expiryDate: expiry,
+            isActive: true
+        });
+        
+        emit ConsentGranted(msg.sender, requester, expiry);
     }
-    
-           
-    // implement giveconsent, revokeconsent, checkpermission
+
+    // User revokes permission early
+    function revokeConsent(address requester) external {
+        consentRecords[msg.sender][requester].isActive = false;
+        emit ConsentRevoked(msg.sender, requester);
+    }
+
+    // DataSharing contract will call this to verify permissions
+    function checkPermission(address requester, address user) external view returns (bool) {
+        ConsentRecord memory record = consentRecords[user][requester];
+        return (record.isActive && block.timestamp <= record.expiryDate);
+    }
 }

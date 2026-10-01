@@ -3,45 +3,56 @@ pragma solidity ^0.8.34;
 
 
 import "./ConsentManager.sol"; 
+import "./DataTypes.sol";
 
 contract DataSharing {
-    
+
     // A state variable pointing to the deployed ConsentManager contract
     ConsentManager public consentManager;
 
     struct LogEntry {
         address requester;
         address user;
+        DataType level;
         uint256 timestamp;
-        bool accessGranted;
+        bool result;
+        bytes32 envelopeHash;
     }
 
    
     LogEntry[] public accessLog;
 
-    event AccessRequested(address indexed requester, address indexed user, bool result);
-
+    event AccessRequested(address indexed requester, address indexed user, DataType level, bool result, bytes32 ticket);
+    
     // The constructor links this contract to the ConsentManager upon deployment
     constructor(address _consentManagerAddress) {
         consentManager = ConsentManager(_consentManagerAddress);
     }
 
     // Requester asks for access to a user's data
-    function requestAccess(address user) external returns (bool) {
+    function requestAccess(address user, DataType level) external returns (bytes32) {
 
-        bool isAllowed = consentManager.checkPermission(msg.sender, user);
+        bool isAllowed = consentManager.checkPermission(msg.sender, user, level);
+
+        bytes32 Ticket;
+
+        if (isAllowed) {
+            Ticket = keccak256(abi.encodePacked(msg.sender, user, level, block.timestamp));
+        } else {
+            Ticket = bytes32(0);
+        }
 
         
         accessLog.push(LogEntry({
             requester: msg.sender,
             user: user,
+            level: level,
             timestamp: block.timestamp,
-            accessGranted: isAllowed
+            accessGranted: isAllowed,
+            Hash: Ticket
         }));
 
-        emit AccessRequested(msg.sender, user, isAllowed);
-
-        
-        return isAllowed;
+        emit AccessRequested(msg.sender, user, level, isAllowed, Ticket);        
+        return Ticket;
     }
 }

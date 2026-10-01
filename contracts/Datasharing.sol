@@ -42,17 +42,29 @@ contract DataSharing {
             Ticket = bytes32(0);
         }
 
+
+        _writeLogEntry(msg.sender, user, level, block.timestamp, isAllowed, Ticket);
         
-        accessLog.push(LogEntry({
-            requester: msg.sender,
-            user: user,
-            level: level,
-            timestamp: block.timestamp,
-            accessGranted: isAllowed,
-            Hash: Ticket
-        }));
 
         emit AccessRequested(msg.sender, user, level, isAllowed, Ticket);        
         return Ticket;
+    }
+
+    function _writeLogEntry(
+        address requester, 
+        address user, 
+        DataType level, 
+        uint256 time, 
+        bool result, 
+        bytes32 envelopeHash
+    ) private {
+        accessLog.push(LogEntry({
+            requester: requester,
+            user: user,
+            level: level,
+            timestamp: time,
+            result: result,
+            envelopeHash: envelopeHash
+        }));
     }
 }

@@ -6,12 +6,12 @@ from eth_account.messages import encode_defunct
 class UserLocalStore:
     def __init__(self, rpc_url, data_sharing_address, data_sharing_abi, user_private_key):
         # State variables from UML
-        self.Name = ""
-        self.Email = ""
-        self.AccountNumber = ""
-        self.CreditTier = ""
-        self.IncomeFigure = ""
-        self.AttestorSignature = b""
+        self.Name = "John"
+        self.Email = "somethingJohn@whatever"
+        self.AccountNumber = "12345678"
+        self.CreditTier = "A"
+        self.IncomeFigure = "50"
+        self.AttestorSignature = b"attestorsignature"
         
         # Web3 connection to verify on-chain state
         self.w3 = Web3(Web3.HTTPProvider(rpc_url))

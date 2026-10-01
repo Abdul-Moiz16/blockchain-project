@@ -1,5 +1,7 @@
 import hardhatToolboxViemPlugin from "@nomicfoundation/hardhat-toolbox-viem";
+import { count } from "console";
 import { configVariable, defineConfig } from "hardhat/config";
+import { hardhat } from "viem/chains";
 
 export default defineConfig({
   plugins: [hardhatToolboxViemPlugin],

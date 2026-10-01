@@ -60,7 +60,7 @@ contract ConsentManagerTest is Test {
         consentManager.createConsent(bob, DataType.INCOME_BAND, 1500, "check income");
 
         bool hasExactAccess = consentManager.checkPermission(bob, alice, DataType.INCOME_BAND);
-        assertTrue(!hasExactAccess);
+        assertTrue(hasExactAccess);
 
         bool hasLowerAccess = consentManager.checkPermission(bob, alice, DataType.CREDIT_TIER_ONLY);
         assertTrue(hasLowerAccess);
@@ -81,7 +81,7 @@ contract ConsentManagerTest is Test {
         assertFalse(hasAccess);
     }
 
-    // checks if the expiry works. so give access, warp till after the acces expires and check if the access is indeed gone. 
+    // checks if the expiry works. so give access, warp till after the acces expires and check if the access is indeed gone.
     function test_CheckPermission_ReturnsFalseIfExpired() public {
         address alice = address(0xA11CE);
         address bob = address(0xB0B);

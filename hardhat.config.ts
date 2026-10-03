@@ -1,7 +1,5 @@
 import hardhatToolboxViemPlugin from "@nomicfoundation/hardhat-toolbox-viem";
-import { count } from "console";
 import { configVariable, defineConfig } from "hardhat/config";
-import { hardhat } from "viem/chains";
 
 export default defineConfig({
   plugins: [hardhatToolboxViemPlugin],
@@ -29,6 +27,11 @@ export default defineConfig({
     hardhatOp: {
       type: "edr-simulated",
       chainType: "op",
+    },
+    localhost: {
+      type: "http",
+      chainType: "l1",
+      url: "http://127.0.0.1:8545",
     },
     sepolia: {
       type: "http",

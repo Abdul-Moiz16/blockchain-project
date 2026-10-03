@@ -128,4 +128,43 @@ contract ConsentManagerTest is Test {
 
         assertFalse(consentManager.checkPermission(bob, alice, DataType.FULL_STATEMENT));
     }
+
+    //if requester already has consents - granting one during its duration does not result in reward
+    function test_CreateConsent_NoMintIfOngoingConsent() public {
+        vm.prank(alice);
+        consentManager.createConsent(bob, DataType.CREDIT_TIER_ONLY, 2 days, "credit");
+
+        vm.prank(alice);
+        consentManager.createConsent(bob, DataType.FULL_STATEMENT, 2 days, "credit");
+        assertEq(token.balanceOf(alice),1);
+    }
+
+    //revoking consent & granting it again does not resul in reward until time of first one runs out (anti-cheating)
+    function test_NoMintWhenRevokedAndGrantedSoon() public {
+        vm.prank(alice);
+        consentManager.createConsent(bob, DataType.FULL_STATEMENT, 2 days, "credit");
+
+        //time for consent is not done yet (1 day left)
+        vm.warp(block.timestamp + 1 days);
+
+        // alice tries to cheat it by revoking/granting
+        vm.prank(alice);
+        consentManager.revokeConsent(bob);
+        vm.prank(alice);
+        consentManager.createConsent(bob, DataType.FULL_STATEMENT, 2 days, "credit");
+        assertEq(token.balanceOf(alice), 1);
+    }
+
+    // new consent after last one's expiry is rewarded 
+    function test_NonOverlaptingNewConsentRewarded() public {
+        vm.prank(alice);
+        consentManager.createConsent(bob, DataType.CREDIT_TIER_ONLY, 2 days, "credit");
+        assertEq(token.balanceOf(alice), 1);
+
+        //time period ends - new consent is valid
+        vm.warp(block.timestamp + 2 days + 1);
+        vm.prank(alice);
+        consentManager.createConsent(bob, DataType.CREDIT_TIER_ONLY, 2 days, "credit");
+        assertEq(token.balanceOf(alice), 2);
+    }
 }

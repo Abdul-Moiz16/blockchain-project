@@ -35,6 +35,7 @@ contract ConsentManager {
         require(exists, "owner not registered");
         require(identityRegistry.registeredRequesters(requester), "requester not registered");
         require(durationInSeconds >= 1 days && durationInSeconds <= 365 days, "duration out of range");
+        bool rewardDue = block.timestamp > consentRecords[msg.sender][requester].expiryDate;
 
         uint256 expiry = block.timestamp + durationInSeconds;
 
@@ -47,7 +48,9 @@ contract ConsentManager {
             isActive: true
         });
         
-        token.mint(msg.sender, 1);
+        if (rewardDue) {
+            token.mint(msg.sender, 1);
+        }
 
         emit ConsentGranted(msg.sender, requester, expiry);
     }

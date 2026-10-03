@@ -117,4 +117,15 @@ contract ConsentManagerTest is Test {
         vm.expectRevert("duration out of range");
         consentManager.createConsent(bob, DataType.FULL_STATEMENT, 366 days, "credit");
     }
+
+    // a requester removed by admin must lose access even if consent still holds
+    function test_CheckPermission_ReturnsFalseIfRequesterDeregistered() public {
+        vm.prank(alice);
+        consentManager.createConsent(bob, DataType.FULL_STATEMENT, 2 days, "credit");
+        assertTrue(consentManager.checkPermission(bob, alice, DataType.FULL_STATEMENT));
+
+        identityRegistry.deregisterRequester(bob);
+
+        assertFalse(consentManager.checkPermission(bob, alice, DataType.FULL_STATEMENT));
+    }
 }

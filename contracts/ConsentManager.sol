@@ -60,10 +60,13 @@ contract ConsentManager {
 
     // DataSharing contract will call this to verify permissions
     function checkPermission(address requester, address user, DataType requiredLevel) external view returns (bool) {
+        if (!identityRegistry.registeredRequesters(requester)){
+            return false;
+        }
+        
         ConsentRecord memory record = consentRecords[user][requester];
 
         if (!record.isActive || block.timestamp > record.expiryDate) {
-            record.isActive = false;
             return false;
         }
 

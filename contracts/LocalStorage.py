@@ -35,12 +35,25 @@ class UserLocalStore:
         return Web3.keccak(text=payload).hex()
 
     def validateTicketAndServe(self, ticket, requested_level):
-        # Validate that the ticket is structurally sound, the consent manager makes the ticket 0 if its denied 
+        # Validate that the ticket is structurally sound, the consent manager makes the ticket 0 if its denied
         # because it always returns a bytes32
 
         if not ticket or int(ticket, 16) == 0:
             return {"error": "Invalid or denied access ticket."}
-    
+
+
+        # Also confirm this exact ticket was really logged on-chain as a GRANTED access before serving anything.
+        events = self.contract.events.AccessRequested.get_logs(from_block=0, to_block="latest")
+        matching = [
+            e for e in events
+            if e.args.ticket == ticket
+            and e.args.user == self.account.address
+            and e.args.result is True
+        ]
+
+        if not matching:
+            return {"error": "No matching granted access found on-chain."}
+
         # Serve data restrictively based on the DataType level requested
         # 0 = CREDIT_TIER_ONLY, 1 = INCOME_BAND, 2 = FULL_STATEMENT
         # this default gets served because the 0 is already proved by getting here.

@@ -55,6 +55,15 @@ class UserLocalStore:
         if not matching:
             return {"error": "No matching granted access found on-chain."}
 
+        # Check if what requester asks for matches what was consented to for this ticket.
+        granted_level = matching[0].args.level
+
+        if requested_level not in (0, 1, 2):
+            return {"error": "Wrong data level."}
+
+        if requested_level > granted_level:
+            return {"error": "Requested level exceeds the level granted to requester."}
+
         # Serve data restrictively based on the DataType level requested
         # 0 = CREDIT_TIER_ONLY, 1 = INCOME_BAND, 2 = FULL_STATEMENT
         # this default gets served because the 0 is already proved by getting here.

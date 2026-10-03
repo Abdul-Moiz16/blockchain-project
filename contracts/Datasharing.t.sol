@@ -32,6 +32,17 @@ contract DataSharingTest is Test {
     }
 
 
+    //helper for asserting log entries
+    function assertLogEntry(uint256 index, DataType level, bool result, bytes32 ticket) internal {
+        (address requester, address user, DataType loggedLevel, , bool loggedResult, bytes32 loggedTicket) = dataSharing.accessLog(index);
+        assertEq(requester, bob);
+        assertEq(user, alice);
+        assertEq(uint256(loggedLevel), uint256(level));
+        assertEq(loggedResult, result);
+        assertEq(loggedTicket, ticket);
+    }
+
+
     //successful access granted if user and data type match a consent from alice
     //request is written into log
     function test_RequestAccess_ConstentedDataSucceedsAndLogged() public {
@@ -45,13 +56,7 @@ contract DataSharingTest is Test {
         assertTrue(ticket != bytes32(0));
 
         //log the data and check if log entry says the right stuff
-        (address requester, address user, DataType level, , bool result, bytes32 loggedTicket) =
-            dataSharing.accessLog(0);
-        assertEq(requester, bob);
-        assertEq(user, alice);
-        assertEq(uint256(level), uint256(DataType.INCOME_BAND));
-        assertTrue(result);
-        assertEq(loggedTicket, ticket);
+        assertLogEntry(0, DataType.INCOME_BAND, true, ticket);
     }
 
     //failed access is denied but still logged into log (not dropped)
@@ -66,13 +71,7 @@ contract DataSharingTest is Test {
         assertEq(ticket, bytes32(0));
 
         //check if log says what it should
-        (address requester, address user, DataType level, , bool result, bytes32 loggedTicket) =
-            dataSharing.accessLog(0);
-        assertEq(requester, bob);
-        assertEq(user, alice);
-        assertEq(uint256(level), uint256(DataType.FULL_STATEMENT));
-        assertFalse(result);
-        assertEq(loggedTicket, bytes32(0));  
+        assertLogEntry(0, DataType.FULL_STATEMENT, false, bytes32(0));
     }
 
     //if bob requests something alice didn't consent, it fails
@@ -82,12 +81,7 @@ contract DataSharingTest is Test {
 
         assertEq(ticket, bytes32(0));
 
-        (address requester, address user, DataType level, , bool result, bytes32 loggedTicket) = dataSharing.accessLog(0);
-        assertEq(requester, bob);
-        assertEq(user, alice);
-        assertEq(uint256(level), uint256(DataType.CREDIT_TIER_ONLY));
-        assertFalse(result);
-        assertEq(loggedTicket, bytes32(0)); 
+        assertLogEntry(0, DataType.CREDIT_TIER_ONLY, false, bytes32(0));
     }
 
     //if admin removes previously approved requester, request fails
@@ -102,12 +96,7 @@ contract DataSharingTest is Test {
 
         assertEq(ticket, bytes32(0));
 
-        (address requester, address user, DataType level, , bool result, bytes32 loggedTicket) = dataSharing.accessLog(0);
-        assertEq(requester, bob);
-        assertEq(user, alice);
-        assertEq(uint256(level), uint256(DataType.FULL_STATEMENT));
-        assertFalse(result);
-        assertEq(loggedTicket, bytes32(0));
+        assertLogEntry(0, DataType.FULL_STATEMENT, false, bytes32(0));
     }
 
 

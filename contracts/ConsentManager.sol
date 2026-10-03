@@ -15,7 +15,6 @@ contract ConsentManager {
         bool isActive;
     }
 
-
     IdentityRegistry public identityRegistry;
     Token public token;
 
@@ -32,9 +31,13 @@ contract ConsentManager {
 
     // User grants permission to a specific requester
     function createConsent(address requester, DataType level, uint256 durationInSeconds, string calldata purpose) external {
+        (bool exists, , ) = identityRegistry.identities(msg.sender);
+        require(exists, "owner not registered");
+        require(identityRegistry.registeredRequesters(requester), "requester not registered");
+        require(durationInSeconds >= 1 days && durationInSeconds <= 365 days, "duration out of range");
+
         uint256 expiry = block.timestamp + durationInSeconds;
-        
-        
+
         consentRecords[msg.sender][requester] = ConsentRecord({
             owner: msg.sender,
             requester: requester,

@@ -12,6 +12,9 @@
 /dist
 /types
 
+# Generated gas report (regenerate with: npx hardhat test solidity --gas-stats-json gas-report.json)
+/gas-report.json
+
 # Environment / secrets
 .env
 .env.*

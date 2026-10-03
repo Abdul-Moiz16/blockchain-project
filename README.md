@@ -28,7 +28,21 @@ npx hardhat test solidity
 ```
 
 Runs the Foundry-style Solidity unit tests (`*.t.sol`) for every contract: `IdentityRegistry`,
-`Token`, `ConsentManager`.
+`Token`, `ConsentManager`, `DataSharing`.
+
+## Gas usage
+
+```bash
+npx hardhat test solidity --gas-stats
+```
+
+Built into Hardhat 3 — no plugin needed. Runs the full unit test suite and prints a per-contract,
+per-function gas table (min/average/median/max/call count), plus deployment cost and bytecode
+size for each contract. To export it for the report instead of just printing it:
+
+```bash
+npx hardhat test solidity --gas-stats-json gas-report.json
+```
 
 ## Run it locally (deploy + interact)
 
@@ -50,7 +64,7 @@ npx hardhat run scripts/interact.js --network localhost
 granting consent, receiving a reward token, and a requester successfully requesting access.
 
 **Important:** don't re-run `deploy.js` against a node that's already had contracts deployed to
-it the resulting addresses will shift, and `interact.js`'s addresses (currently hardcoded) will
+it — the resulting addresses will shift, and `interact.js`'s addresses (currently hardcoded) will
 go stale. Either restart the node (`Ctrl+C` in Terminal 1, then `npx hardhat node` again) before
 redeploying, or redeploy and update the addresses in `interact.js` to match.
 

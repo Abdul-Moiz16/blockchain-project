@@ -43,10 +43,11 @@ class UserLocalStore:
 
 
         # Also confirm this exact ticket was really logged on-chain as a GRANTED access before serving anything.
+        ticket_bytes = bytes.fromhex(ticket[2:] if ticket.startswith("0x") else ticket)
         events = self.contract.events.AccessRequested.get_logs(from_block=0, to_block="latest")
         matching = [
             e for e in events
-            if e.args.ticket == ticket
+            if e.args.ticket == ticket_bytes
             and e.args.user == self.account.address
             and e.args.result is True
         ]

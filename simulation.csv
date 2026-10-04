@@ -1,0 +1,174 @@
+transaction,alice,gas,ms
+registerRequester,0,44192,23.95
+registerRequester,0,44180,10.94
+registerRequester,0,44192,9.87
+registerUser,1,91935,9.98
+createConsent,1,118066,18.12
+requestAccess (success),1,129776,14.08
+requestAccess (fail),1,91605,14.16
+revokeConsent,1,28786,11.37
+requestAccess (fail),1,91182,10.22
+createConsent,1,100954,8.28
+requestAccess (success),1,112676,7.98
+requestAccess (fail),1,91605,7.14
+revokeConsent,1,28774,6.39
+requestAccess (fail),1,91182,7.00
+registerUser,2,91947,6.34
+createConsent,2,118066,7.69
+requestAccess (success),2,112676,6.99
+requestAccess (fail),2,91605,7.11
+revokeConsent,2,28786,6.14
+requestAccess (fail),2,91182,6.83
+registerUser,3,91947,6.52
+createConsent,3,118066,8.11
+requestAccess (success),3,112676,7.31
+requestAccess (fail),3,91605,6.94
+revokeConsent,3,28786,5.88
+requestAccess (fail),3,91182,6.81
+createConsent,3,100954,7.10
+requestAccess (success),3,112676,6.83
+requestAccess (fail),3,91605,6.75
+revokeConsent,3,28774,5.98
+requestAccess (fail),3,91182,7.43
+createConsent,3,100966,11.03
+requestAccess (success),3,112676,9.49
+requestAccess (fail),3,91605,11.30
+revokeConsent,3,28786,8.67
+requestAccess (fail),3,91182,10.22
+registerUser,4,91947,7.83
+createConsent,4,118066,8.06
+requestAccess (success),4,112676,8.99
+requestAccess (fail),4,91605,8.74
+revokeConsent,4,28786,7.02
+requestAccess (fail),4,91182,9.39
+createConsent,4,100954,8.95
+requestAccess (success),4,112676,8.48
+requestAccess (fail),4,91605,8.83
+revokeConsent,4,28774,13.54
+requestAccess (fail),4,91182,9.86
+createConsent,4,100966,10.40
+requestAccess (success),4,112676,9.18
+requestAccess (fail),4,91605,8.41
+revokeConsent,4,28786,8.13
+requestAccess (fail),4,91182,7.03
+registerUser,5,91947,6.04
+createConsent,5,118066,7.65
+requestAccess (success),5,112676,6.95
+requestAccess (fail),5,91605,7.21
+revokeConsent,5,28786,7.13
+requestAccess (fail),5,91182,8.22
+createConsent,5,100954,7.88
+requestAccess (success),5,112676,7.36
+requestAccess (fail),5,91605,8.17
+revokeConsent,5,28774,8.05
+requestAccess (fail),5,91182,8.81
+createConsent,5,100966,10.83
+requestAccess (success),5,112676,11.99
+requestAccess (fail),5,91605,10.64
+revokeConsent,5,28786,8.68
+requestAccess (fail),5,91182,10.41
+registerUser,6,91947,11.65
+createConsent,6,118066,11.71
+requestAccess (success),6,112676,10.19
+requestAccess (fail),6,91605,9.32
+revokeConsent,6,28786,9.49
+requestAccess (fail),6,91182,8.22
+registerUser,7,91947,11.57
+createConsent,7,118066,16.06
+requestAccess (success),7,112664,12.85
+requestAccess (fail),7,91593,11.79
+revokeConsent,7,28786,9.80
+requestAccess (fail),7,91170,11.00
+createConsent,7,100954,10.85
+requestAccess (success),7,112664,11.22
+requestAccess (fail),7,91593,9.35
+revokeConsent,7,28774,9.68
+requestAccess (fail),7,91170,9.81
+createConsent,7,100966,9.86
+requestAccess (success),7,112664,9.10
+requestAccess (fail),7,91593,9.37
+revokeConsent,7,28786,7.56
+requestAccess (fail),7,91170,8.73
+registerUser,8,91947,6.28
+createConsent,8,118066,7.48
+requestAccess (success),8,112676,9.19
+requestAccess (fail),8,91605,9.39
+revokeConsent,8,28786,8.06
+requestAccess (fail),8,91182,10.18
+createConsent,8,100954,8.68
+requestAccess (success),8,112676,6.37
+requestAccess (fail),8,91605,10.06
+revokeConsent,8,28774,12.35
+requestAccess (fail),8,91182,11.15
+registerUser,9,91947,12.33
+createConsent,9,118066,10.80
+requestAccess (success),9,112676,11.40
+requestAccess (fail),9,91605,11.33
+revokeConsent,9,28786,8.20
+requestAccess (fail),9,91182,10.17
+createConsent,9,100954,8.81
+requestAccess (success),9,112676,12.68
+requestAccess (fail),9,91605,11.21
+revokeConsent,9,28774,9.58
+requestAccess (fail),9,91182,9.16
+createConsent,9,100966,7.95
+requestAccess (success),9,112676,9.05
+requestAccess (fail),9,91605,8.74
+revokeConsent,9,28786,8.42
+requestAccess (fail),9,91182,9.62
+registerUser,10,91947,15.98
+createConsent,10,118066,9.32
+requestAccess (success),10,112676,8.32
+requestAccess (fail),10,91605,7.70
+revokeConsent,10,28786,6.66
+requestAccess (fail),10,91182,7.38
+createConsent,10,100954,7.28
+requestAccess (success),10,112676,5.28
+requestAccess (fail),10,91605,5.28
+revokeConsent,10,28774,5.07
+requestAccess (fail),10,91182,5.46
+createConsent,10,100966,5.19
+requestAccess (success),10,112676,5.19
+requestAccess (fail),10,91605,4.70
+revokeConsent,10,28786,4.14
+requestAccess (fail),10,91182,4.84
+registerUser,11,91947,4.34
+createConsent,11,118066,4.89
+requestAccess (success),11,112676,5.43
+requestAccess (fail),11,91605,6.16
+revokeConsent,11,28786,4.66
+requestAccess (fail),11,91182,5.72
+registerUser,12,91959,5.34
+createConsent,12,118066,5.18
+requestAccess (success),12,112676,5.85
+requestAccess (fail),12,91605,5.22
+revokeConsent,12,28786,4.09
+requestAccess (fail),12,91182,5.52
+registerUser,13,91959,5.17
+createConsent,13,118066,5.81
+requestAccess (success),13,112676,7.03
+requestAccess (fail),13,91605,5.70
+revokeConsent,13,28786,5.90
+requestAccess (fail),13,91182,6.33
+registerUser,14,91959,4.96
+createConsent,14,118066,6.97
+requestAccess (success),14,112676,5.40
+requestAccess (fail),14,91605,4.77
+revokeConsent,14,28786,5.43
+requestAccess (fail),14,91182,5.55
+registerUser,15,91959,4.97
+createConsent,15,118066,6.33
+requestAccess (success),15,112676,5.62
+requestAccess (fail),15,91605,6.02
+revokeConsent,15,28786,5.11
+requestAccess (fail),15,91182,5.70
+createConsent,15,100954,8.02
+requestAccess (success),15,112676,8.10
+requestAccess (fail),15,91605,7.06
+revokeConsent,15,28774,4.70
+requestAccess (fail),15,91182,6.34
+createConsent,15,100966,6.52
+requestAccess (success),15,112676,6.11
+requestAccess (fail),15,91605,8.08
+revokeConsent,15,28786,4.90
+requestAccess (fail),15,91182,5.98

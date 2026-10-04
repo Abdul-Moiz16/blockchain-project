@@ -5,7 +5,7 @@ import "./DataTypes.sol";
 
 
 contract IdentityRegistry {
-    address public administrator;
+    address public immutable administrator;
     
     // These are all the actors
     struct Identity {

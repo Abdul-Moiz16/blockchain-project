@@ -1,0 +1,176 @@
+{
+  "contracts": {
+    "contracts/ConsentManager.sol:ConsentManager": {
+      "sourceName": "contracts/ConsentManager.sol",
+      "contractName": "ConsentManager",
+      "proxyChain": [],
+      "deployment": {
+        "min": 1293279,
+        "max": 1293279,
+        "avg": 1293279,
+        "median": 1293279,
+        "count": 2,
+        "runtimeSize": 5726
+      },
+      "functions": {
+        "checkPermission": {
+          "min": 7131,
+          "max": 9960,
+          "avg": 9403,
+          "median": 9960,
+          "count": 12
+        },
+        "createConsent": {
+          "min": 50796,
+          "max": 117970,
+          "avg": 105283,
+          "median": 117790,
+          "count": 15
+        },
+        "revokeConsent": {
+          "min": 28570,
+          "max": 28570,
+          "avg": 28570,
+          "median": 28570,
+          "count": 2
+        }
+      }
+    },
+    "contracts/Datasharing.sol:DataSharing": {
+      "sourceName": "contracts/Datasharing.sol",
+      "contractName": "DataSharing",
+      "proxyChain": [],
+      "deployment": {
+        "min": 579970,
+        "max": 579970,
+        "avg": 579970,
+        "median": 579970,
+        "count": 1,
+        "runtimeSize": 2420
+      },
+      "functions": {
+        "accessLog": {
+          "min": 10457,
+          "max": 10457,
+          "avg": 10457,
+          "median": 10457,
+          "count": 4
+        },
+        "requestAccess": {
+          "min": 105672,
+          "max": 129584,
+          "avg": 112959,
+          "median": 108290,
+          "count": 4
+        }
+      }
+    },
+    "contracts/IdentityRegistry.sol:IdentityRegistry": {
+      "sourceName": "contracts/IdentityRegistry.sol",
+      "contractName": "IdentityRegistry",
+      "proxyChain": [],
+      "deployment": {
+        "min": 1153923,
+        "max": 1153923,
+        "avg": 1153923,
+        "median": 1153923,
+        "count": 3,
+        "runtimeSize": 5110
+      },
+      "functions": {
+        "attestations": {
+          "min": 5215,
+          "max": 5215,
+          "avg": 5215,
+          "median": 5215,
+          "count": 2
+        },
+        "attestAttribute": {
+          "min": 75161,
+          "max": 75173,
+          "avg": 75167,
+          "median": 75167,
+          "count": 2
+        },
+        "deregisterRequester": {
+          "min": 22097,
+          "max": 22097,
+          "avg": 22097,
+          "median": 22097,
+          "count": 2
+        },
+        "identities": {
+          "min": 8082,
+          "max": 8261,
+          "avg": 8252,
+          "median": 8261,
+          "count": 20
+        },
+        "registerAttestor": {
+          "min": 44054,
+          "max": 44054,
+          "avg": 44054,
+          "median": 44054,
+          "count": 2
+        },
+        "registeredRequesters": {
+          "min": 2877,
+          "max": 2877,
+          "avg": 2877,
+          "median": 2877,
+          "count": 30
+        },
+        "registerRequester": {
+          "min": 43976,
+          "max": 43976,
+          "avg": 43976,
+          "median": 43976,
+          "count": 2
+        },
+        "registerUser": {
+          "min": 91947,
+          "max": 91947,
+          "avg": 91947,
+          "median": 91947,
+          "count": 5
+        }
+      }
+    },
+    "contracts/Token.sol:Token": {
+      "sourceName": "contracts/Token.sol",
+      "contractName": "Token",
+      "proxyChain": [],
+      "deployment": {
+        "min": 374438,
+        "max": 374438,
+        "avg": 374438,
+        "median": 374438,
+        "count": 3,
+        "runtimeSize": 1384
+      },
+      "functions": {
+        "balanceOf": {
+          "min": 2802,
+          "max": 2802,
+          "avg": 2802,
+          "median": 2802,
+          "count": 6
+        },
+        "mint": {
+          "min": 48104,
+          "max": 48104,
+          "avg": 48104,
+          "median": 48104,
+          "count": 1
+        },
+        "transferOwnership": {
+          "min": 26954,
+          "max": 27158,
+          "avg": 27090,
+          "median": 27158,
+          "count": 3
+        }
+      }
+    }
+  }
+}

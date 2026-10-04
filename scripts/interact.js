@@ -163,8 +163,8 @@ async function main() {
     const newConsent = await consentManager.read.consentRecords(
         [alice.account.address, bob.account.address]
     );
-    assert.equal(newConsent[2], 1, "the consent should be at level 1");
-    console.log("Consent level is now:", newConsent[2]);
+    assert.equal(newConsent[0], 1, "the consent should be at level 1");
+    console.log("Consent level is now:", newConsent[0]);
 
     // alice revokes her consent to try to cheat the system
     console.log("\n7. Alice revoking consent...");
@@ -178,7 +178,7 @@ async function main() {
     const revokedConsent = await consentManager.read.consentRecords(
         [alice.account.address, bob.account.address]
     );
-    assert.equal(revokedConsent[5], false, "consent shouldn't be given");
+    assert.equal(revokedConsent[2], false, "consent shouldn't be given");
     const newPermission = await consentManager.read.checkPermission(
         [bob.account.address, alice.account.address, 0]
     );

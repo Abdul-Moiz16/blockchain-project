@@ -4,7 +4,8 @@ from eth_account import Account
 from eth_account.messages import encode_defunct
 
 class UserLocalStore:
-    def __init__(self, rpc_url, data_sharing_address, data_sharing_abi, user_private_key):
+    def __init__(self, rpc_url, data_sharing_address, data_sharing_abi,
+                 consent_manager_address, consent_manager_abi, user_private_key):
         # State variables from UML
         self.Name = "John"
         self.Email = "somethingJohn@whatever"
@@ -15,6 +16,8 @@ class UserLocalStore:
         
         # Web3 connection to verify on-chain state
         self.w3 = Web3(Web3.HTTPProvider(rpc_url))
+        self.consent_manager = self.w3.eth.contract(address=consent_manager_address, abi=consent_manager_abi)
+
         self.contract = self.w3.eth.contract(address=data_sharing_address, abi=data_sharing_abi)
         self.account = Account.from_key(user_private_key)
 
@@ -34,7 +37,7 @@ class UserLocalStore:
         # Returns a 32-byte Keccak hash representing the raw data
         return Web3.keccak(text=payload).hex()
 
-    def validateTicketAndServe(self, ticket, requested_level):
+    def validateTicketAndServe(self, ticket, requested_level, signature):
         # Validate that the ticket is structurally sound, the consent manager makes the ticket 0 if its denied
         # because it always returns a bytes32
 
@@ -44,16 +47,25 @@ class UserLocalStore:
 
         # Also confirm this exact ticket was really logged on-chain as a GRANTED access before serving anything.
         ticket_bytes = bytes.fromhex(ticket[2:] if ticket.startswith("0x") else ticket)
-        events = self.contract.events.AccessRequested.get_logs(from_block=0, to_block="latest")
+        events = self.contract.events.AccessRequested.get_logs(
+            from_block=0, to_block="latest",
+            argument_filters={"user": self.account.address})
         matching = [
             e for e in events
             if e.args.ticket == ticket_bytes
             and e.args.user == self.account.address
             and e.args.result is True
         ]
+        signer = Account.recover_message(encode_defunct(hexstr=ticket), signature=signature)
+
 
         if not matching:
-            return {"error": "No matching granted access found on-chain."}
+                    return {"error": "No matching granted access found on-chain."}
+        
+        if signer != matching[0].args.requester:
+            return {"error" : "Ticket was not presented by the requester it was issued to."}
+        
+        
 
         # Check if what requester asks for matches what was consented to for this ticket.
         granted_level = matching[0].args.level
@@ -67,6 +79,15 @@ class UserLocalStore:
         # Serve data restrictively based on the DataType level requested
         # 0 = CREDIT_TIER_ONLY, 1 = INCOME_BAND, 2 = FULL_STATEMENT
         # this default gets served because the 0 is already proved by getting here.
+        
+        # The ticket only proves access was granted at request time; make sure consent hasn't since been revoked or expired.
+        still_allowed = self.consent_manager.functions.checkPermission(
+            matching[0].args.requester, self.account.address, requested_level).call()
+        
+        if not still_allowed:
+            return {"error": "Consent has been revoked or has expired."}
+        
+    
         served_data = {
             "CreditTier": self.CreditTier,
             "AttestorSignature": self.AttestorSignature.decode('utf-8')
@@ -79,7 +100,9 @@ class UserLocalStore:
             served_data["Name"] = self.Name
             served_data["Email"] = self.Email
             served_data["AccountNumber"] = self.AccountNumber
-            
+
+        
+        
         return {
             "status": "success",
             "served_payload": served_data

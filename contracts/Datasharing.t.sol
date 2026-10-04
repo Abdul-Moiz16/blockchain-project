@@ -25,7 +25,7 @@ contract DataSharingTest is Test {
         dataSharing = new DataSharing(address(consentManager));
 
 
-        //making alice registered user and bob admin-approved requester
+        //making alice registered user and bob admin approved requester
         vm.prank(alice);
         identityRegistry.registerUser(keccak256("alice-data"), "ref-1");
         identityRegistry.registerRequester(bob);
@@ -67,7 +67,7 @@ contract DataSharingTest is Test {
         vm.prank(bob);
         bytes32 ticket = dataSharing.requestAccess(alice, DataType.FULL_STATEMENT);
 
-        //ticket is an all-0 num => failed
+        //ticket is an all 0 num => failed
         assertEq(ticket, bytes32(0));
 
         //check if log says what it should

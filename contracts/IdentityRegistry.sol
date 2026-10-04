@@ -27,8 +27,6 @@ contract IdentityRegistry {
         administrator = msg.sender;
     }
 
-    // add registeruser, addrequestor, addattestor and storeattestation 
-
     event UserRegistered(address indexed user, bytes32 identityHash);
     event Attested(address indexed owner, DataType scope, address indexed attestor, bytes32 claimHash, uint256 expiry);
 

@@ -23,7 +23,7 @@ contract ConsentManagerTest is Test {
         token.transferOwnership(address(consentManager));
 
         // createConsent now requires the owner to be registered and the requester
-        // to be on the admin-approved allow-list — do both once here.
+        // to be on the admin approved allow list, do both once here.
         vm.prank(alice);
         identityRegistry.registerUser(keccak256("alice-data"), "ref-1");
         identityRegistry.registerRequester(bob);
@@ -107,7 +107,7 @@ contract ConsentManagerTest is Test {
         consentManager.createConsent(notARequester, DataType.FULL_STATEMENT, 2 days, "credit");
     }
 
-    // createConsent must reject a duration outside the 1-365 day range
+    // createConsent must reject a duration outside the 1 to 365 day range
     function test_CreateConsent_RevertsIfDurationOutOfRange() public {
         vm.prank(alice);
         vm.expectRevert("duration out of range");
@@ -129,7 +129,7 @@ contract ConsentManagerTest is Test {
         assertFalse(consentManager.checkPermission(bob, alice, DataType.FULL_STATEMENT));
     }
 
-    //if requester already has consents - granting one during its duration does not result in reward
+    //if requester already has consents, granting one during its duration does not result in reward
     function test_CreateConsent_NoMintIfOngoingConsent() public {
         vm.prank(alice);
         consentManager.createConsent(bob, DataType.CREDIT_TIER_ONLY, 2 days, "credit");
@@ -161,7 +161,7 @@ contract ConsentManagerTest is Test {
         consentManager.createConsent(bob, DataType.CREDIT_TIER_ONLY, 2 days, "credit");
         assertEq(token.balanceOf(alice), 1);
 
-        //time period ends - new consent is valid
+        //time period ends, new consent is valid
         vm.warp(block.timestamp + 2 days + 1);
         vm.prank(alice);
         consentManager.createConsent(bob, DataType.CREDIT_TIER_ONLY, 2 days, "credit");

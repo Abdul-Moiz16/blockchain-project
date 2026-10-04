@@ -43,14 +43,14 @@ contract DataSharing {
         }
 
 
-        _writeLogEntry(msg.sender, user, level, uint64(block.timestamp), isAllowed, Ticket);
+        WriteLogEntry(msg.sender, user, level, uint64(block.timestamp), isAllowed, Ticket);
         
 
         emit AccessRequested(msg.sender, user, level, isAllowed, Ticket);        
         return Ticket;
     }
 
-    function _writeLogEntry(
+    function WriteLogEntry(
         address requester, 
         address user, 
         DataType level, 

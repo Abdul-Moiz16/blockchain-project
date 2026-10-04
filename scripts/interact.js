@@ -1,7 +1,21 @@
 import { network } from "hardhat";
 import { keccak256, toHex } from "viem";
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 
+// we are making a heper function here to call the release data script
+//without the need to call it from terminal separately
+function getData(ticket, level, userAddress, signature){
+    const out = execFileSync(
+        process.env.PYTHON ?? "python",
+        ["scripts/ReleaseData.py", ticket, String(level), userAddress, signature],
+        { encoding: "utf8" }
+    );
+    return JSON.parse(out.trim().split("\n").pop());
+}
+
+
+//main function
 async function main() {
     //connect to local node
     const { viem } = await network.create();
@@ -61,7 +75,7 @@ async function main() {
     //2. Granting consent & testing requests
 
     // alice grants consent to bob - level 0 (only credit check), valid for 2 days
-    console.log("\n1. Alice creating consent for Bob...");
+    console.log("\n2. Alice creating consent for Bob...");
     const consentTx = await consentManager.write.createConsent(
         [bob.account.address, 0, 172800n, "Credit Check"],
         { account: alice.account }
@@ -81,7 +95,7 @@ async function main() {
     console.log("Bob has permission for level 0:", permittedLevel);
 
     // bob requests wrong access - bob tries to access level 2 but has level 0
-    console.log("\n2. Bob requesting wrong access to Alice's data...");
+    console.log("\n3. Bob requesting wrong access to Alice's data...");
     const wrongRequest = await dataSharing.write.requestAccess(
         [alice.account.address, 2],
         { account: bob.account }
@@ -99,7 +113,7 @@ async function main() {
     console.log("Ticket Hash: ", deniedRequest[5]);
 
     // bob requests correct access (level 0)
-    console.log("\n3. Bob requesting correct access to Alice's data...");
+    console.log("\n4. Bob requesting correct access to Alice's data...");
     const correctRequest = await dataSharing.write.requestAccess(
         [alice.account.address, 0],
         { account: bob.account }
@@ -116,6 +130,14 @@ async function main() {
     console.log("Logged Result:", grantedRequest[4]);
     console.log("Ticket Hash: ", grantedRequest[5]);
 
+    //check that bob sined his ticket & gets the data he wants from alice's data store (LocalStorage.py)
+    console.log("\n5. Bob is getting data from Alice's storage...")
+    const ticket = grantedRequest[5];
+    const bobSig = await bob.signMessage({ message: { raw: ticket } });
+    const data = getData(ticket, 0, alice.account.address, bobSig);
+    assert.equal(data.status, "success", "LocalStorage should have given Bob the data");
+    console.log("LocalStorage returned: ", data);
+
     //PART 3: Alice cheating workflow
     //note: because not limiting Alice's consent granting can be exploited by her (continuous consents
     //resulting in fast accumulation of tokens = cheating to maximize her balance with one user - bob)
@@ -125,7 +147,7 @@ async function main() {
     //result into a token. It will count as the new deadline for next consent though. Alice therefore 
 
     //alice tries to grant token again - 2 days haven't passed yet though,so no reward
-    console.log("\n1. Alice tries to give another consent before the first one ended...");
+    console.log("\n6. Alice tries to give another consent before the first one ended...");
     const earlyConsentTx = await consentManager.write.createConsent(
         [bob.account.address, 1, 172800n, "Credit Check"],
         { account: alice.account }
@@ -145,7 +167,7 @@ async function main() {
     console.log("Consent level is now:", newConsent[2]);
 
     // alice revokes her consent to try to cheat the system
-    console.log("\n5. Alice revoking consent...");
+    console.log("\n7. Alice revoking consent...");
     const revokeTx = await consentManager.write.revokeConsent(
         [bob.account.address],
         { account: alice.account }
@@ -163,8 +185,13 @@ async function main() {
     assert.equal(newPermission, false, "there should be no permission for Bob");
     console.log("Bob has permission after revocation:", newPermission);
 
+    // check that data is not served after consent revoked 
+    const revokedData = getData(ticket, 0, alice.account.address, bobSig);
+    assert.equal(revokedData.status, undefined, "Bob shouldn't get the data");
+    console.log("LocalStorage answered: ", revokedData.error);
+    
     // alice grants a new consent right after revoking - but shouldn't give token because the 2 day timer still going for the old one
-    console.log("\n6. Alice tries to cheat & grant new consent...");
+    console.log("\n8. Alice tries to cheat & grant new consent...");
     const newConsentTx = await consentManager.write.createConsent(
         [bob.account.address, 0, 172800n, "Credit Check"],
         { account: alice.account }

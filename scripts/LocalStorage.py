@@ -5,7 +5,7 @@ from eth_account.messages import encode_defunct
 
 class UserLocalStore:
     def __init__(self, rpc_url, data_sharing_address, data_sharing_abi,
-                 consent_manager_address, consent_manager_abi, user_private_key):
+                 consent_manager_address, consent_manager_abi, user_address):
         # State variables from UML
         self.Name = "John"
         self.Email = "somethingJohn@whatever"
@@ -19,7 +19,7 @@ class UserLocalStore:
         self.consent_manager = self.w3.eth.contract(address=consent_manager_address, abi=consent_manager_abi)
 
         self.contract = self.w3.eth.contract(address=data_sharing_address, abi=data_sharing_abi)
-        self.account = Account.from_key(user_private_key)
+        self.user_address = Web3.to_checksum_address(user_address)
 
     #implement validateTicketandServe and generateAttributeHashes
 
@@ -49,15 +49,17 @@ class UserLocalStore:
         ticket_bytes = bytes.fromhex(ticket[2:] if ticket.startswith("0x") else ticket)
         events = self.contract.events.AccessRequested.get_logs(
             from_block=0, to_block="latest",
-            argument_filters={"user": self.account.address})
+            argument_filters={"user": self.user_address})
         matching = [
             e for e in events
             if e.args.ticket == ticket_bytes
-            and e.args.user == self.account.address
+            and e.args.user == self.user_address
             and e.args.result is True
         ]
-        signer = Account.recover_message(encode_defunct(hexstr=ticket), signature=signature)
-
+        try:
+            signer = Account.recover_message(encode_defunct(hexstr=ticket), signature=signature)
+        except Exception:
+             return {"error": "Invalid signature."}
 
         if not matching:
                     return {"error": "No matching granted access found on-chain."}
@@ -82,7 +84,7 @@ class UserLocalStore:
         
         # The ticket only proves access was granted at request time; make sure consent hasn't since been revoked or expired.
         still_allowed = self.consent_manager.functions.checkPermission(
-            matching[0].args.requester, self.account.address, requested_level).call()
+           matching[0].args.requester, self.user_address, requested_level).call()
         
         if not still_allowed:
             return {"error": "Consent has been revoked or has expired."}

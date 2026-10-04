@@ -8,13 +8,13 @@ import "./DataTypes.sol";
 contract DataSharing {
 
     // A state variable pointing to the deployed ConsentManager contract
-    ConsentManager public consentManager;
+    ConsentManager public immutable consentManager;
 
     struct LogEntry {
         address requester;
         address user;
         DataType level;
-        uint256 timestamp;
+        uint64 timestamp;
         bool result;
         bytes32 envelopeHash;
     }
@@ -43,7 +43,7 @@ contract DataSharing {
         }
 
 
-        _writeLogEntry(msg.sender, user, level, block.timestamp, isAllowed, Ticket);
+        _writeLogEntry(msg.sender, user, level, uint64(block.timestamp), isAllowed, Ticket);
         
 
         emit AccessRequested(msg.sender, user, level, isAllowed, Ticket);        
@@ -54,7 +54,7 @@ contract DataSharing {
         address requester, 
         address user, 
         DataType level, 
-        uint256 time, 
+        uint64 time, 
         bool result, 
         bytes32 envelopeHash
     ) private {

@@ -7,16 +7,14 @@ import "./DataTypes.sol";
 
 contract ConsentManager {
     struct ConsentRecord {
-        address owner;
-        address requester;
         DataType level;
-        uint256 expiryDate;
-        string purpose;
+        uint64 expiryDate;
         bool isActive;
+        string purpose;
     }
 
-    IdentityRegistry public identityRegistry;
-    Token public token;
+    IdentityRegistry public immutable identityRegistry;
+    Token public immutable token;
 
     // Mapping: user => (requester => ConsentRecord)
     mapping(address => mapping(address => ConsentRecord)) public consentRecords;
@@ -37,11 +35,9 @@ contract ConsentManager {
         require(durationInSeconds >= 1 days && durationInSeconds <= 365 days, "duration out of range");
         bool rewardDue = block.timestamp > consentRecords[msg.sender][requester].expiryDate;
 
-        uint256 expiry = block.timestamp + durationInSeconds;
+        uint64 expiry = uint64(block.timestamp + durationInSeconds);
 
         consentRecords[msg.sender][requester] = ConsentRecord({
-            owner: msg.sender,
-            requester: requester,
             level: level,
             expiryDate: expiry,
             purpose: purpose,
@@ -67,7 +63,7 @@ contract ConsentManager {
             return false;
         }
         
-        ConsentRecord memory record = consentRecords[user][requester];
+        ConsentRecord storage record = consentRecords[user][requester];
 
         if (!record.isActive || block.timestamp > record.expiryDate) {
             return false;
